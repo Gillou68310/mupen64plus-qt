@@ -47,11 +47,7 @@ const QString GitHub = "https://github.com/dh4/mupen64plus-qt";
 
 const QString TheGamesDBAPIKey = "5dd59a89da5c0018b0e9ded34e299cf675e94d51e229a19822074d1a67019f9f";
 
-#ifdef Q_OS_WIN
-    #define SETTINGS    QSettings(AppNameLower+".ini", QSettings::IniFormat)
-#else
-    #define SETTINGS    QSettings(ParentNameLower, AppNameLower)
-#endif
+#define SETTINGS QSettings()
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD) || defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD)
     #define OS_LINUX_OR_BSD

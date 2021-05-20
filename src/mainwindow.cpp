@@ -167,7 +167,7 @@ void MainWindow::autoloadSettings()
                 SETTINGS.setValue("Paths/mupen64plus", check);
 
         foreach (QString check, pluginCheck)
-            if (QFileInfo(check+"/mupen64plus-video-rice.so").exists())
+            if (QFileInfo(check+"/mupen64plus-video-gliden64.so").exists())
                 SETTINGS.setValue("Paths/plugins", check);
 
         foreach (QString check, dataCheck)
@@ -184,7 +184,7 @@ void MainWindow::autoloadSettings()
         else if (QFileInfo(currentDir+"/mupen64plus.exe").exists())
             SETTINGS.setValue("Paths/mupen64plus", currentDir+"/mupen64plus.exe");
 
-        if (QFileInfo(currentDir+"/mupen64plus-video-rice.dll").exists())
+        if (QFileInfo(currentDir+"/mupen64plus-video-gliden64.dll").exists())
             SETTINGS.setValue("Paths/plugins", currentDir);
 
         if (QFileInfo(currentDir+"/mupen64plus.ini").exists())
@@ -301,19 +301,21 @@ void MainWindow::createMenu()
     //Settings
     settingsMenu = new QMenu(tr("&Settings"), this);
     editorAction = settingsMenu->addAction(tr("Edit mupen64plus.cfg..."));
-    settingsMenu->addSeparator();
-    configureGameAction = settingsMenu->addAction(tr("Configure &Game..."));
-#ifndef Q_OS_OSX //OSX does not show the quit action so the separator is unneeded
-    settingsMenu->addSeparator();
-#endif
     configureAction = settingsMenu->addAction(tr("&Configure..."));
     configureAction->setIcon(QIcon::fromTheme("preferences-other"));
 
+    gameSettingsMenu = new QMenu(tr("&Game Settings"), this);
+    configureGameAction = gameSettingsMenu->addAction(tr("Configure &Game..."));
+    gameEditorAction = gameSettingsMenu->addAction(tr("Edit Game mupen64plus.cfg..."));
+
     configureGameAction->setEnabled(false);
+    gameEditorAction->setEnabled(false);
 
     menuBar->addMenu(settingsMenu);
+    menuBar->addMenu(gameSettingsMenu);
 
     connect(editorAction, SIGNAL(triggered()), this, SLOT(openEditor()));
+    connect(gameEditorAction, SIGNAL(triggered()), this, SLOT(openGameEditor()));
     connect(configureGameAction, SIGNAL(triggered()), this, SLOT(openGameSettings()));
     connect(configureAction, SIGNAL(triggered()), this, SLOT(openSettings()));
 
@@ -396,6 +398,7 @@ void MainWindow::createMenu()
                << configureAction
                << configureGameAction
                << editorAction
+               << gameEditorAction
                << quitAction;
 
     //Create list of actions that are disabled when emulator is not running
@@ -405,7 +408,8 @@ void MainWindow::createMenu()
     menuRomSelected << startAction
                     << deleteAction
                     << downloadAction
-                    << configureGameAction;
+                    << configureGameAction
+                    << gameEditorAction;
 }
 
 
@@ -724,10 +728,29 @@ void MainWindow::openEditor()
 }
 
 
+void MainWindow::openGameEditor()
+{
+    QString fileName = getCurrentRomInfoFromView("fileName");
+    QString configPath = SETTINGS.value(fileName+"/config", "").toString();
+    QDir configDir = QDir(configPath);
+    QString configFile = configDir.absoluteFilePath("mupen64plus.cfg");
+    QFile config(configFile);
+
+    if (configPath == "" || !config.exists()) {
+        QMessageBox::information(this, tr("Not Found"), QString(tr("Editor requires config directory to be "))
+                                 + tr("set to a directory with mupen64plus.cfg."));
+    } else {
+        ConfigEditor configEditor(configFile, this);
+        configEditor.exec();
+    }
+}
+
+
 void MainWindow::openGameSettings()
 {
     GameSettingsDialog gameSettingsDialog(getCurrentRomInfoFromView("fileName"), this);
     gameSettingsDialog.exec();
+    toggleMenus(true);
 }
 
 
@@ -907,6 +930,12 @@ void MainWindow::showRomMenu(const QPoint &pos)
     connect(contextStartAction, SIGNAL(triggered()), this, SLOT(launchRomFromMenu()));
     connect(contextConfigureGameAction, SIGNAL(triggered()), this, SLOT(openGameSettings()));
 
+    QString fileName = getCurrentRomInfoFromView("fileName");
+    if (SETTINGS.value(fileName+"/config", "").toString() != "") {
+        QAction *contextgameEditor = contextMenu->addAction(tr("Edit game mupen64plus.cfg..."));
+        connect(contextgameEditor, SIGNAL(triggered()), this, SLOT(openGameEditor()));
+    }
+
     if (SETTINGS.value("Other/downloadinfo", "").toString() == "true") {
         contextMenu->addSeparator();
         QAction *contextDownloadAction = contextMenu->addAction(tr("&Download/Update Info..."));
@@ -955,6 +984,13 @@ void MainWindow::toggleMenus(bool active)
     ) {
         foreach (QAction *next, menuRomSelected)
             next->setEnabled(false);
+    }
+    else
+    {
+        QString fileName = getCurrentRomInfoFromView("fileName");
+        if (SETTINGS.value(fileName+"/config", "").toString() == "") {
+            gameEditorAction->setEnabled(false);
+        }
     }
 
     if (SETTINGS.value("Other/downloadinfo", "").toString() == "") {

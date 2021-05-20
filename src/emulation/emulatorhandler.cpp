@@ -163,10 +163,6 @@ void EmulatorHandler::startEmulator(QDir romDir, QString romFileName, QString zi
     QDir configDir(configPath);
     QDir pluginDir(pluginPath);
 
-    QString emuMode = SETTINGS.value("Emulation/mode", "").toString();
-
-    QString resolution = SETTINGS.value("Graphics/resolution", "").toString();
-
     QString videoPlugin = SETTINGS.value("Plugins/video", "").toString();
     QString audioPlugin = SETTINGS.value("Plugins/audio", "").toString();
     QString inputPlugin = SETTINGS.value("Plugins/input", "").toString();
@@ -211,9 +207,6 @@ void EmulatorHandler::startEmulator(QDir romDir, QString romFileName, QString zi
 
     QStringList args;
 
-    if (SETTINGS.value("saveoptions", "").toString() != "true")
-        args << "--nosaveoptions";
-
     if (dataPath != "" && dataDir.exists())
         args << "--datadir" << dataPath;
     if (gameConfigPath != "" && gameConfigDir.exists())
@@ -222,22 +215,6 @@ void EmulatorHandler::startEmulator(QDir romDir, QString romFileName, QString zi
         args << "--configdir" << configPath;
     if (pluginPath != "" && pluginDir.exists())
         args << "--plugindir" << pluginPath;
-
-    if (emuMode != "")
-        args << "--emumode" << emuMode;
-
-    if (SETTINGS.value("Graphics/osd", "").toString() == "true")
-        args << "--osd";
-    else
-        args << "--noosd";
-
-    if (SETTINGS.value("Graphics/fullscreen", "").toString() == "true")
-        args << "--fullscreen";
-    else
-        args << "--windowed";
-
-    if (resolution != "")
-        args << "--resolution" << resolution;
 
     if (gameVideoPlugin != "")
         args << "--gfx" << gameVideoPlugin;
@@ -274,14 +251,6 @@ void EmulatorHandler::startEmulator(QDir romDir, QString romFileName, QString zi
 
     if (zip)
         connect(emulatorProc, SIGNAL(finished(int)), this, SLOT(cleanTemp()));
-
-    // GLideN64 workaround. Can be removed if workaround is no longer needed
-    // See: https://github.com/gonetz/GLideN64/issues/454#issuecomment-126853972
-    if (SETTINGS.value("Other/forcegl33", "").toString() == "true") {
-        QProcessEnvironment emulatorEnv = QProcessEnvironment::systemEnvironment();
-        emulatorEnv.insert("MESA_GL_VERSION_OVERRIDE", "3.3COMPAT");
-        emulatorProc->setProcessEnvironment(emulatorEnv);
-    }
 
     emulatorProc->setWorkingDirectory(QFileInfo(emulatorFile).dir().canonicalPath());
     emulatorProc->setProcessChannelMode(QProcess::MergedChannels);

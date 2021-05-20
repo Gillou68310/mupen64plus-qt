@@ -44,6 +44,15 @@ int main(int argc, char *argv[])
 {
     QApplication application(argc, argv);
 
+    QSettings::setDefaultFormat(QSettings::IniFormat);
+#ifdef Q_OS_WIN
+    QCoreApplication::setOrganizationName(ParentName);
+#else
+    QCoreApplication::setOrganizationName(ParentNameLower);
+#endif
+
+    QCoreApplication::setApplicationName(AppNameLower);
+
     QTranslator translator;
     QString language = SETTINGS.value("language", getDefaultLanguage()).toString();
 
@@ -54,9 +63,6 @@ int main(int argc, char *argv[])
             application.installTranslator(&translator);
         }
     }
-
-    QCoreApplication::setOrganizationName(ParentName);
-    QCoreApplication::setApplicationName(AppName);
 
     MainWindow window;
 

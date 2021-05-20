@@ -86,6 +86,7 @@ private:
     QAction *documentationAction;
     QAction *downloadAction;
     QAction *editorAction;
+    QAction *gameEditorAction;
     QAction *fullScreenAction;
     QAction *logAction;
     QAction *mupenDocsAction;
@@ -110,6 +111,7 @@ private:
     QMenu *helpMenu;
     QMenu *layoutMenu;
     QMenu *settingsMenu;
+    QMenu *gameSettingsMenu;
     QMenu *viewMenu;
     QMenuBar *menuBar;
     QScrollArea *emptyView;
@@ -141,6 +143,7 @@ private slots:
     void openDeleteDialog();
     void openDownloader();
     void openEditor();
+    void openGameEditor();
     void openGameSettings();
     void openLog();
     void openSettings();

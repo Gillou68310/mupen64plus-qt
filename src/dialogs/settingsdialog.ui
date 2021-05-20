@@ -36,7 +36,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="pathsWidget">
       <attribute name="title">
@@ -206,152 +206,6 @@
           </item>
          </layout>
         </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="emulationWidget">
-      <attribute name="title">
-       <string>Emulation</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_6">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="emulationLayout">
-         <property name="topMargin">
-          <number>10</number>
-         </property>
-         <item row="1" column="0">
-          <widget class="QRadioButton" name="cachedButton">
-           <property name="text">
-            <string>Cached Interpreter</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QRadioButton" name="pureButton">
-           <property name="text">
-            <string>Pure Interpreter</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QRadioButton" name="dynamicButton">
-           <property name="text">
-            <string>Dynamic Recompiler</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="1">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="graphicsWidget">
-      <attribute name="title">
-       <string>Graphics</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_10">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="graphicsLayout" columnminimumwidth="150,0">
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="osdLabel">
-           <property name="text">
-            <string>On Screen Display:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="fullscreenLabel">
-           <property name="text">
-            <string>Fullscreen:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="resolutionLabel">
-           <property name="text">
-            <string>Resolution:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QCheckBox" name="osdOption">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QCheckBox" name="fullscreenOption">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QComboBox" name="resolutionBox">
-           <property name="maximumSize">
-            <size>
-             <width>100</width>
-             <height>16777215</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <spacer name="graphicsVSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="0" column="1">
-        <spacer name="graphicsHSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -1135,40 +989,13 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <layout class="QGridLayout" name="otherLayout" columnminimumwidth="100,0,0">
+        <layout class="QGridLayout" name="otherLayout">
          <property name="leftMargin">
           <number>10</number>
          </property>
          <property name="topMargin">
           <number>10</number>
          </property>
-         <item row="0" column="2">
-          <widget class="QCheckBox" name="downloadOption">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QCheckBox" name="saveOption">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="parametersLabel">
-           <property name="minimumSize">
-            <size>
-             <width>150</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Additional Parameters:</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="0" colspan="2">
           <widget class="QLabel" name="downloadLabel">
            <property name="minimumSize">
@@ -1182,29 +1009,42 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QLabel" name="saveLabel">
-           <property name="text">
-            <string>Save Options:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
+         <item row="2" column="0">
           <widget class="QLabel" name="languageLabel">
            <property name="text">
             <string>Language:</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1" colspan="2">
-          <widget class="QComboBox" name="languageBox"/>
+         <item row="0" column="2">
+          <widget class="QCheckBox" name="downloadOption">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
          </item>
-         <item row="2" column="1" colspan="2">
+         <item row="1" column="0">
+          <widget class="QLabel" name="parametersLabel">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Additional Parameters:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1" colspan="2">
           <widget class="QLineEdit" name="parametersLine">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use to pass additional parameters to Mupen64Plus (cheats, etc.). See &lt;a href=&quot;http://mupen64plus.org/wiki/index.php?title=UIConsoleUsage&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://mupen64plus.org/wiki/index.php?title=UIConsoleUsage&lt;/span&gt;&lt;/a&gt; for more information.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
           </widget>
+         </item>
+         <item row="2" column="1" colspan="2">
+          <widget class="QComboBox" name="languageBox"/>
          </item>
         </layout>
        </item>
@@ -1266,12 +1106,6 @@
   <tabstop>romList</tabstop>
   <tabstop>romAddButton</tabstop>
   <tabstop>romRemoveButton</tabstop>
-  <tabstop>pureButton</tabstop>
-  <tabstop>cachedButton</tabstop>
-  <tabstop>dynamicButton</tabstop>
-  <tabstop>osdOption</tabstop>
-  <tabstop>fullscreenOption</tabstop>
-  <tabstop>resolutionBox</tabstop>
   <tabstop>videoBox</tabstop>
   <tabstop>audioBox</tabstop>
   <tabstop>inputBox</tabstop>
@@ -1311,7 +1145,6 @@
   <tabstop>listSortBox</tabstop>
   <tabstop>listDescendingOption</tabstop>
   <tabstop>downloadOption</tabstop>
-  <tabstop>saveOption</tabstop>
   <tabstop>parametersLine</tabstop>
   <tabstop>languageBox</tabstop>
  </tabstops>

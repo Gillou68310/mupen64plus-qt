@@ -188,7 +188,8 @@ int GridView::getCurrentRom()
 
 QString GridView::getCurrentRomInfo(QString infoName)
 {
-    const char *property = infoName.toUtf8().constData();
+    std::string temp = infoName.toStdString();
+    const char *property = temp.c_str();
 
     if (gridLayout->count() > currentGridRom)
         return gridLayout->itemAt(currentGridRom)->widget()->property(property).toString();
@@ -246,7 +247,6 @@ void GridView::resetView()
     while ((gridItem = gridLayout->takeAt(0)) != nullptr)
     {
         delete gridItem->widget();
-        delete gridItem;
     }
 
     gridCurrent = false;

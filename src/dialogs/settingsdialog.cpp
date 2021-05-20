@@ -65,67 +65,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, int activeTab) : QDialog(parent)
     connect(ui->romAddButton, SIGNAL(clicked()), this, SLOT(addRomDirectory()));
     connect(ui->romRemoveButton, SIGNAL(clicked()), this, SLOT(removeRomDirectory()));
 
-
-    //Populate Emulation tab
-    QString emuMode = SETTINGS.value("Emulation/mode", "").toString();
-    if (emuMode == "0")
-        ui->pureButton->setChecked(true);
-    else if (emuMode == "1")
-        ui->cachedButton->setChecked(true);
-    else
-        ui->dynamicButton->setChecked(true);
-
-
-    //Populate Graphics tab
-    if (SETTINGS.value("Graphics/osd", "true").toString() == "true")
-        ui->osdOption->setChecked(true);
-    if (SETTINGS.value("Graphics/fullscreen", "").toString() == "true")
-        ui->fullscreenOption->setChecked(true);
-
-    QStringList useableModes, modes;
-    useableModes << tr("default"); //Allow users to use the screen resolution set in the config file
-
-    modes << "2560x1600"
-          << "2560x1440"
-          << "2048x1152"
-          << "1920x1200"
-          << "1920x1080"
-          << "1680x1050"
-          << "1600x1200"
-          << "1600x900"
-          << "1440x900"
-          << "1400x1050"
-          << "1366x768"
-          << "1360x768"
-          << "1280x1024"
-          << "1280x960"
-          << "1280x800"
-          << "1280x768"
-          << "1280x720"
-          << "1152x864"
-          << "1024x768"
-          << "1024x600"
-          << "800x600"
-          << "640x480";
-
-
-    desktop = new QDesktopWidget;
-    int screenWidth = desktop->width();
-    int screenHeight = desktop->height();
-
-    foreach (QString mode, modes)
-    {
-        QStringList values = mode.split("x");
-
-        if (values.value(0).toInt() <= screenWidth && values.value(1).toInt() <= screenHeight)
-            useableModes << mode;
-    }
-
-    ui->resolutionBox->insertItems(0, useableModes);
-    int resIndex = useableModes.indexOf(SETTINGS.value("Graphics/resolution","").toString());
-    if (resIndex >= 0) ui->resolutionBox->setCurrentIndex(resIndex);
-
-
     //Populate Plugins tab
     QStringList audioPlugins, inputPlugins, rspPlugins, videoPlugins;
     pluginsDir = QDir(SETTINGS.value("Paths/plugins", "").toString());
@@ -155,15 +94,27 @@ SettingsDialog::SettingsDialog(QWidget *parent, int activeTab) : QDialog(parent)
     ui->inputBox->insertItems(0, inputPlugins);
     ui->rspBox->insertItems(0, rspPlugins);
 
-    //Set Rice as default
+    //Set default plugins
     QString videoDefault = "";
-    if (videoPlugins.contains("mupen64plus-video-rice"))
-        videoDefault = "mupen64plus-video-rice";
+    if (videoPlugins.contains("mupen64plus-video-gliden64"))
+        videoDefault = "mupen64plus-video-gliden64";
+
+    QString rspDefault = "";
+    if (rspDefault.contains("mupen64plus-rsp-hle"))
+        rspDefault = "mupen64plus-rsp-hle";
+
+    QString inputDefault = "";
+    if (inputDefault.contains("mupen64plus-input-sdl"))
+        inputDefault = "mupen64plus-input-sdl";
+
+    QString audioDefault = "";
+    if (audioDefault.contains("mupen64plus-audio-sdl"))
+        audioDefault = "mupen64plus-audio-sdl";
 
     int videoIndex = videoPlugins.indexOf(SETTINGS.value("Plugins/video",videoDefault).toString());
-    int audioIndex = audioPlugins.indexOf(SETTINGS.value("Plugins/audio","").toString());
-    int inputIndex = inputPlugins.indexOf(SETTINGS.value("Plugins/input","").toString());
-    int rspIndex = rspPlugins.indexOf(SETTINGS.value("Plugins/rsp","").toString());
+    int audioIndex = audioPlugins.indexOf(SETTINGS.value("Plugins/audio",audioDefault).toString());
+    int inputIndex = inputPlugins.indexOf(SETTINGS.value("Plugins/input",inputDefault).toString());
+    int rspIndex = rspPlugins.indexOf(SETTINGS.value("Plugins/rsp",rspDefault).toString());
 
     if (videoIndex >= 0) ui->videoBox->setCurrentIndex(videoIndex);
     if (audioIndex >= 0) ui->audioBox->setCurrentIndex(audioIndex);
@@ -376,9 +327,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, int activeTab) : QDialog(parent)
     } else
         toggleDownload(false);
 
-    if (SETTINGS.value("saveoptions", "").toString() == "true")
-        ui->saveOption->setChecked(true);
-
     ui->parametersLine->setText(SETTINGS.value("Other/parameters", "").toString());
 
     for (int i = 0; i < languages.length(); i++)
@@ -511,32 +459,6 @@ void SettingsDialog::editSettings()
     SETTINGS.setValue("Paths/roms", romDirectories.join("|"));
 
 
-    //Emulation tab
-    if (ui->pureButton->isChecked())
-        SETTINGS.setValue("Emulation/mode", "0");
-    else if (ui->cachedButton->isChecked())
-        SETTINGS.setValue("Emulation/mode", "1");
-    else
-        SETTINGS.setValue("Emulation/mode", "2");
-
-
-    //Graphics tab
-    if (ui->osdOption->isChecked())
-        SETTINGS.setValue("Graphics/osd", true);
-    else
-        SETTINGS.setValue("Graphics/osd", "");
-
-    if (ui->fullscreenOption->isChecked())
-        SETTINGS.setValue("Graphics/fullscreen", true);
-    else
-        SETTINGS.setValue("Graphics/fullscreen", "");
-
-    if (ui->resolutionBox->currentText() != "default")
-        SETTINGS.setValue("Graphics/resolution", ui->resolutionBox->currentText());
-    else
-        SETTINGS.setValue("Graphics/resolution", "");
-
-
     //Plugins tab
     SETTINGS.setValue("Plugins/video", ui->videoBox->currentText());
     SETTINGS.setValue("Plugins/audio", ui->audioBox->currentText());
@@ -619,11 +541,6 @@ void SettingsDialog::editSettings()
 
 
     //Other tab
-    if (ui->saveOption->isChecked())
-        SETTINGS.setValue("saveoptions", true);
-    else
-        SETTINGS.setValue("saveoptions", "");
-
     SETTINGS.setValue("Other/parameters", ui->parametersLine->text());
     SETTINGS.setValue("language", ui->languageBox->itemData(ui->languageBox->currentIndex()));
 

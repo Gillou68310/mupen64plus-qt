@@ -201,7 +201,8 @@ int ListView::getCurrentRom()
 
 QString ListView::getCurrentRomInfo(QString infoName)
 {
-    const char *property = infoName.toUtf8().constData();
+    std::string temp = infoName.toStdString();
+    const char *property = temp.c_str();
 
     if (listLayout->count() > currentListRom)
         return listLayout->itemAt(currentListRom)->widget()->property(property).toString();
